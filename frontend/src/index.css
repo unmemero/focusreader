@@ -1,0 +1,382 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: "Newsreader", "Lora", Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+@layer base {
+  :root {
+    /* Raw Light Mode ("Warm Paper & Ink") and Dark Mode ("Cozy Library Night") tokens */
+    --bg-canvas-light: #f5efe4;
+    --bg-canvas-dark: #171412;
+
+    --stone-950-light: #f8f4ec;
+    --stone-950-dark: #12100e;
+    --stone-900-light: #fcf9f3;
+    --stone-900-dark: #211d1a;
+    --stone-800-light: #eae2d3;
+    --stone-800-dark: #2e2925;
+    --stone-700-light: #d5c9b6;
+    --stone-700-dark: #443d37;
+    --stone-600-light: #8c8070;
+    --stone-600-dark: #635a52;
+    --stone-500-light: #6e6355;
+    --stone-500-dark: #857b72;
+    --stone-400-light: #574d40;
+    --stone-400-dark: #a8a096;
+    --stone-300-light: #362f27;
+    --stone-300-dark: #d6d0c6;
+    --stone-200-light: #241f19;
+    --stone-200-dark: #e7e2d8;
+    --stone-100-light: #17130f;
+    --stone-100-dark: #f5f2eb;
+
+    --amber-950-light: #fef3c7;
+    --amber-950-dark: #451a03;
+    --amber-700-light: #92400e;
+    --amber-700-dark: #b45309;
+    --amber-600-light: #b45309;
+    --amber-600-dark: #d97706;
+    --amber-500-light: #92400e;
+    --amber-500-dark: #f59e0b;
+    --amber-400-light: #b45309;
+    --amber-400-dark: #fbbf24;
+    --amber-300-light: #92400e;
+    --amber-300-dark: #fcd34d;
+    --amber-200-light: #78350f;
+    --amber-200-dark: #fde68a;
+    --amber-100-light: #17130f;
+    --amber-100-dark: #fef3c7;
+
+    --emerald-950-light: #dcfce7;
+    --emerald-950-dark: #022c22;
+    --emerald-600-light: #15803d;
+    --emerald-600-dark: #059669;
+    --emerald-500-light: #16a34a;
+    --emerald-500-dark: #10b981;
+    --emerald-400-light: #15803d;
+    --emerald-400-dark: #34d399;
+    --emerald-300-light: #166534;
+    --emerald-300-dark: #6ee7b7;
+    --emerald-200-light: #14532d;
+    --emerald-200-dark: #a7f3d0;
+
+    --teal-500-light: #0f766e;
+    --teal-500-dark: #14b8a6;
+    --teal-400-light: #0f766e;
+    --teal-400-dark: #2dd4bf;
+    --teal-300-light: #115e59;
+    --teal-300-dark: #5eead4;
+
+    --rose-950-light: #ffe4e6;
+    --rose-950-dark: #4c0519;
+    --rose-800-light: #fda4af;
+    --rose-800-dark: #9f1239;
+    --rose-600-light: #e11d48;
+    --rose-600-dark: #e11d48;
+    --rose-500-light: #e11d48;
+    --rose-500-dark: #f43f5e;
+    --rose-400-light: #be123c;
+    --rose-400-dark: #fb7185;
+    --rose-300-light: #9f1239;
+    --rose-300-dark: #fda4af;
+    --rose-200-light: #881337;
+    --rose-200-dark: #fecdd3;
+
+    --orange-500-light: #c2410c;
+    --orange-500-dark: #f97316;
+    --orange-300-light: #9a3412;
+    --orange-300-dark: #fdba74;
+
+    /* Default to light tokens before media query / light-dark() evaluation */
+    --bg-canvas: var(--bg-canvas-light);
+    --color-stone-950: var(--stone-950-light);
+    --color-stone-900: var(--stone-900-light);
+    --color-stone-800: var(--stone-800-light);
+    --color-stone-700: var(--stone-700-light);
+    --color-stone-600: var(--stone-600-light);
+    --color-stone-500: var(--stone-500-light);
+    --color-stone-400: var(--stone-400-light);
+    --color-stone-300: var(--stone-300-light);
+    --color-stone-200: var(--stone-200-light);
+    --color-stone-100: var(--stone-100-light);
+
+    --color-amber-950: var(--amber-950-light);
+    --color-amber-700: var(--amber-700-light);
+    --color-amber-600: var(--amber-600-light);
+    --color-amber-500: var(--amber-500-light);
+    --color-amber-400: var(--amber-400-light);
+    --color-amber-300: var(--amber-300-light);
+    --color-amber-200: var(--amber-200-light);
+    --color-amber-100: var(--amber-100-light);
+
+    --color-emerald-950: var(--emerald-950-light);
+    --color-emerald-600: var(--emerald-600-light);
+    --color-emerald-500: var(--emerald-500-light);
+    --color-emerald-400: var(--emerald-400-light);
+    --color-emerald-300: var(--emerald-300-light);
+    --color-emerald-200: var(--emerald-200-light);
+
+    --color-teal-500: var(--teal-500-light);
+    --color-teal-400: var(--teal-400-light);
+    --color-teal-300: var(--teal-300-light);
+
+    --color-rose-950: var(--rose-950-light);
+    --color-rose-800: var(--rose-800-light);
+    --color-rose-600: var(--rose-600-light);
+    --color-rose-500: var(--rose-500-light);
+    --color-rose-400: var(--rose-400-light);
+    --color-rose-300: var(--rose-300-light);
+    --color-rose-200: var(--rose-200-light);
+
+    --color-orange-500: var(--orange-500-light);
+    --color-orange-300: var(--orange-300-light);
+
+    --scrollbar-track: #ebe3d5;
+    --scrollbar-thumb: #b8ab96;
+
+    /* MANDATORY: Fallback for browsers without light-dark() support */
+    @media (prefers-color-scheme: dark) {
+      --bg-canvas: var(--bg-canvas-dark);
+      --color-stone-950: var(--stone-950-dark);
+      --color-stone-900: var(--stone-900-dark);
+      --color-stone-800: var(--stone-800-dark);
+      --color-stone-700: var(--stone-700-dark);
+      --color-stone-600: var(--stone-600-dark);
+      --color-stone-500: var(--stone-500-dark);
+      --color-stone-400: var(--stone-400-dark);
+      --color-stone-300: var(--stone-300-dark);
+      --color-stone-200: var(--stone-200-dark);
+      --color-stone-100: var(--stone-100-dark);
+
+      --color-amber-950: var(--amber-950-dark);
+      --color-amber-700: var(--amber-700-dark);
+      --color-amber-600: var(--amber-600-dark);
+      --color-amber-500: var(--amber-500-dark);
+      --color-amber-400: var(--amber-400-dark);
+      --color-amber-300: var(--amber-300-dark);
+      --color-amber-200: var(--amber-200-dark);
+      --color-amber-100: var(--amber-100-dark);
+
+      --color-emerald-950: var(--emerald-950-dark);
+      --color-emerald-600: var(--emerald-600-dark);
+      --color-emerald-500: var(--emerald-500-dark);
+      --color-emerald-400: var(--emerald-400-dark);
+      --color-emerald-300: var(--emerald-300-dark);
+      --color-emerald-200: var(--emerald-200-dark);
+
+      --color-teal-500: var(--teal-500-dark);
+      --color-teal-400: var(--teal-400-dark);
+      --color-teal-300: var(--teal-300-dark);
+
+      --color-rose-950: var(--rose-950-dark);
+      --color-rose-800: var(--rose-800-dark);
+      --color-rose-600: var(--rose-600-dark);
+      --color-rose-500: var(--rose-500-dark);
+      --color-rose-400: var(--rose-400-dark);
+      --color-rose-300: var(--rose-300-dark);
+      --color-rose-200: var(--rose-200-dark);
+
+      --color-orange-500: var(--orange-500-dark);
+      --color-orange-300: var(--orange-300-dark);
+
+      --scrollbar-track: #1c1815;
+      --scrollbar-thumb: #443d37;
+    }
+
+    /* Use light-dark() so colors automatically follow computed color-scheme (including manual overrides) */
+    @supports (color: light-dark(white, black)) {
+      --bg-canvas: light-dark(var(--bg-canvas-light), var(--bg-canvas-dark));
+      --color-stone-950: light-dark(var(--stone-950-light), var(--stone-950-dark));
+      --color-stone-900: light-dark(var(--stone-900-light), var(--stone-900-dark));
+      --color-stone-800: light-dark(var(--stone-800-light), var(--stone-800-dark));
+      --color-stone-700: light-dark(var(--stone-700-light), var(--stone-700-dark));
+      --color-stone-600: light-dark(var(--stone-600-light), var(--stone-600-dark));
+      --color-stone-500: light-dark(var(--stone-500-light), var(--stone-500-dark));
+      --color-stone-400: light-dark(var(--stone-400-light), var(--stone-400-dark));
+      --color-stone-300: light-dark(var(--stone-300-light), var(--stone-300-dark));
+      --color-stone-200: light-dark(var(--stone-200-light), var(--stone-200-dark));
+      --color-stone-100: light-dark(var(--stone-100-light), var(--stone-100-dark));
+
+      --color-amber-950: light-dark(var(--amber-950-light), var(--amber-950-dark));
+      --color-amber-700: light-dark(var(--amber-700-light), var(--amber-700-dark));
+      --color-amber-600: light-dark(var(--amber-600-light), var(--amber-600-dark));
+      --color-amber-500: light-dark(var(--amber-500-light), var(--amber-500-dark));
+      --color-amber-400: light-dark(var(--amber-400-light), var(--amber-400-dark));
+      --color-amber-300: light-dark(var(--amber-300-light), var(--amber-300-dark));
+      --color-amber-200: light-dark(var(--amber-200-light), var(--amber-200-dark));
+      --color-amber-100: light-dark(var(--amber-100-light), var(--amber-100-dark));
+
+      --color-emerald-950: light-dark(var(--emerald-950-light), var(--emerald-950-dark));
+      --color-emerald-600: light-dark(var(--emerald-600-light), var(--emerald-600-dark));
+      --color-emerald-500: light-dark(var(--emerald-500-light), var(--emerald-500-dark));
+      --color-emerald-400: light-dark(var(--emerald-400-light), var(--emerald-400-dark));
+      --color-emerald-300: light-dark(var(--emerald-300-light), var(--emerald-300-dark));
+      --color-emerald-200: light-dark(var(--emerald-200-light), var(--emerald-200-dark));
+
+      --color-teal-500: light-dark(var(--teal-500-light), var(--teal-500-dark));
+      --color-teal-400: light-dark(var(--teal-400-light), var(--teal-400-dark));
+      --color-teal-300: light-dark(var(--teal-300-light), var(--teal-300-dark));
+
+      --color-rose-950: light-dark(var(--rose-950-light), var(--rose-950-dark));
+      --color-rose-800: light-dark(var(--rose-800-light), var(--rose-800-dark));
+      --color-rose-600: light-dark(var(--rose-600-light), var(--rose-600-dark));
+      --color-rose-500: light-dark(var(--rose-500-light), var(--rose-500-dark));
+      --color-rose-400: light-dark(var(--rose-400-light), var(--rose-400-dark));
+      --color-rose-300: light-dark(var(--rose-300-light), var(--rose-300-dark));
+      --color-rose-200: light-dark(var(--rose-200-light), var(--rose-200-dark));
+
+      --color-orange-500: light-dark(var(--orange-500-light), var(--orange-500-dark));
+      --color-orange-300: light-dark(var(--orange-300-light), var(--orange-300-dark));
+
+      --scrollbar-track: light-dark(#ebe3d5, #1c1815);
+      --scrollbar-thumb: light-dark(#b8ab96, #443d37);
+    }
+
+    /* MANDATORY: Apply color-scheme to :root and map <meta name="color-scheme"> overrides */
+    color-scheme: light dark;
+    accent-color: var(--color-amber-600);
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+
+    &:has(> head > meta[name="color-scheme"][content="dark"]) {
+      color-scheme: dark;
+    }
+    &:has(> head > meta[name="color-scheme"][content="light"]) {
+      color-scheme: light;
+    }
+  }
+
+  @supports not (scrollbar-color: auto) {
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--scrollbar-track);
+    }
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: var(--bg-canvas);
+    color: var(--color-stone-100);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Distraction-free typography rules */
+  .focus-passage {
+    font-family: var(--font-serif);
+    line-height: 2.1;
+    letter-spacing: 0.015em;
+    font-size: 1.25rem;
+  }
+
+  dialog:modal {
+    overscroll-behavior: contain;
+  }
+
+  dialog::backdrop {
+    overflow: hidden;
+    overscroll-behavior: contain;
+    background-color: rgba(23, 19, 15, 0.65);
+    backdrop-filter: blur(4px);
+  }
+}
+
+/* Directional View Transitions for Multi-Stage Flows */
+@keyframes slide-to-left {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slide-from-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slide-to-right {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slide-from-left {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+::view-transition-group(root) {
+  animation: 0.35s ease-in-out both;
+}
+
+html:active-view-transition-type(forward)::view-transition-old(root) {
+  animation-name: slide-to-left;
+}
+html:active-view-transition-type(forward)::view-transition-new(root) {
+  animation-name: slide-from-right;
+}
+
+html:active-view-transition-type(backward)::view-transition-old(root) {
+  animation-name: slide-to-right;
+}
+html:active-view-transition-type(backward)::view-transition-new(root) {
+  animation-name: slide-from-left;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    translate: 0 18px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.slide-fade-up {
+  opacity: 1;
+  translate: 0 0;
+  animation: fade-in-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition:
+    opacity 0.4s ease-out,
+    translate 0.4s ease-out;
+}
+
+@starting-style {
+  .slide-fade-up {
+    opacity: 0;
+    translate: 0 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(root) {
+    animation: none !important;
+  }
+
+  .slide-fade-up {
+    animation: none !important;
+    translate: none;
+    transition-duration: 0.1s;
+  }
+
+  @starting-style {
+    .slide-fade-up {
+      translate: none;
+    }
+  }
+}
+

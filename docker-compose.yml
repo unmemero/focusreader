@@ -1,0 +1,44 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: focusreader-backend
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - PORT=3001
+      - HOST=0.0.0.0
+      - DATABASE_URL=file:/data/focusreader.db
+      - LLM_BASE_URL=http://localhost:8080
+      - LLM_MODEL=Meta-Llama-3.1-8B-Instruct-Q8_0
+      - LLM_TIMEOUT_SECONDS=30
+    volumes:
+      - focusreader_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: focusreader-frontend
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  focusreader_data:
+    driver: local
