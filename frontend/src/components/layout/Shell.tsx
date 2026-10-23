@@ -71,17 +71,17 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
               </button>
             </nav>
 
-            {/* Right Controls: Analytics, Settings, Theme Toggle & Status Indicator */}
+            {/* Right Controls: Analytics, Settings, Theme Toggle & AI Status */}
             <div className="flex items-center space-x-2 text-xs font-medium">
               <button
                 type="button"
                 onClick={() => onTabChange('analytics')}
                 aria-label="My Progress"
                 title="My Progress"
-                className={`p-2 rounded-lg border transition-colors cursor-pointer ${
+                className={`p-2 rounded-lg border transition-all duration-150 cursor-pointer ${
                   activeTab === 'analytics'
-                    ? 'border-teal-500/60 bg-stone-800 text-teal-300 shadow-sm'
-                    : 'border-stone-700/80 bg-stone-800/60 hover:bg-stone-800 text-stone-400 hover:text-stone-200'
+                    ? 'border-teal-500 bg-teal-950/60 text-teal-300 shadow-sm ring-1 ring-teal-500/40'
+                    : 'border-stone-700 bg-stone-800 text-teal-400 hover:bg-stone-700 hover:text-teal-300 hover:border-teal-500/60 shadow-xs active:scale-95'
                 }`}
               >
                 <BarChart2 className="w-4 h-4" />
@@ -93,10 +93,10 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
                 onClick={() => onTabChange('settings')}
                 aria-label="Settings"
                 title="Settings"
-                className={`p-2 rounded-lg border transition-colors cursor-pointer ${
+                className={`p-2 rounded-lg border transition-all duration-150 cursor-pointer ${
                   activeTab === 'settings'
-                    ? 'border-amber-500/60 bg-stone-800 text-amber-300 shadow-sm'
-                    : 'border-stone-700/80 bg-stone-800/60 hover:bg-stone-800 text-stone-400 hover:text-stone-200'
+                    ? 'border-amber-500 bg-amber-950/60 text-amber-300 shadow-sm ring-1 ring-amber-500/40'
+                    : 'border-stone-700 bg-stone-800 text-amber-400 hover:bg-stone-700 hover:text-amber-300 hover:border-amber-500/60 shadow-xs active:scale-95'
                 }`}
               >
                 <Settings className="w-4 h-4" />
@@ -114,34 +114,37 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
                     ? 'Switch to Warm Paper (Light Mode)'
                     : 'Switch to Cozy Library Night (Dark Mode)'
                 }
-                className="p-2 rounded-lg border border-stone-700/80 bg-stone-800/60 hover:bg-stone-800 text-stone-300 hover:text-stone-100 transition-colors cursor-pointer"
+                className="p-2 rounded-lg border border-stone-700 bg-stone-800 hover:bg-stone-700 text-stone-200 hover:text-stone-50 hover:border-stone-500 shadow-xs transition-all duration-150 active:scale-95 cursor-pointer"
               >
                 {resolvedScheme === 'dark' ? (
                   <Sun className="w-4 h-4 text-amber-400" />
                 ) : (
-                  <Moon className="w-4 h-4 text-stone-300" />
+                  <Moon className="w-4 h-4 text-amber-200" />
                 )}
               </button>
 
+              {/* Frameless AI Spark in the far right corner */}
               <div
                 role="status"
                 aria-label={
                   config?.is_llm_connected
-                    ? `AI Coach Connected (${config.llm_model})`
-                    : 'AI Coach Disconnected (Offline Mode)'
+                    ? `AI Coach Online (${config.llm_model})`
+                    : 'AI Coach Offline (Practice Mode)'
                 }
-                className={`p-2 rounded-lg border flex items-center justify-center transition-colors ${
-                  config?.is_llm_connected
-                    ? 'border-emerald-600/35 bg-emerald-950/50 text-emerald-400'
-                    : 'border-rose-600/35 bg-rose-950/50 text-rose-400'
-                }`}
                 title={
                   config?.is_llm_connected
-                    ? `Connected to AI Assistant (${config.llm_model})`
-                    : 'Offline Practice Mode: Reading stats are saved safely'
+                    ? `AI Coach Online (${config.llm_model})`
+                    : 'AI Coach Offline (Practice Mode)'
                 }
+                className="pl-1.5 flex items-center justify-center cursor-default select-none"
               >
-                <Sparkles className="w-4 h-4" />
+                <Sparkles
+                  className={`w-5 h-5 transition-colors duration-300 ${
+                    config?.is_llm_connected
+                      ? 'text-emerald-400 sparkle-twinkle'
+                      : 'text-stone-500 opacity-40'
+                  }`}
+                />
               </div>
             </div>
           </div>

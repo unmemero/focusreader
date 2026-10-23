@@ -42,5 +42,36 @@ describe('Shell Layout Component (Unit Tests)', () => {
     // Verify clicking settings icon triggers onTabChange('settings')
     fireEvent.click(screen.getByRole('button', { name: /Settings/i }));
     expect(onTabChange).toHaveBeenCalledWith('settings');
+
+    // Verify online frameless AI spark is displayed
+    const statusElem = screen.getByRole('status');
+    expect(statusElem).toHaveAttribute('aria-label', expect.stringContaining('AI Coach Online'));
+    const sparkIcon = statusElem.querySelector('svg');
+    expect(sparkIcon).toHaveClass('sparkle-twinkle', 'text-emerald-400');
+  });
+
+  it('renders greyed out frameless AI spark when offline', async () => {
+    vi.spyOn(api, 'getConfig').mockResolvedValue({
+      llm_base_url: 'http://localhost:8080',
+      llm_model: 'gemma-2-9b-it',
+      llm_timeout_seconds: 15,
+      is_llm_connected: false,
+    });
+
+    await act(async () => {
+      render(
+        <SessionProvider>
+          <Shell activeTab="drill" onTabChange={vi.fn()}>
+            <div>Child Viewport Content</div>
+          </Shell>
+        </SessionProvider>
+      );
+    });
+
+    const statusElem = screen.getByRole('status');
+    expect(statusElem).toHaveAttribute('aria-label', expect.stringContaining('AI Coach Offline'));
+    const sparkIcon = statusElem.querySelector('svg');
+    expect(sparkIcon).toHaveClass('text-stone-500');
+    expect(sparkIcon).not.toHaveClass('sparkle-twinkle');
   });
 });
