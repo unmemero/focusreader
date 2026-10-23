@@ -48,25 +48,13 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
               <button
                 onClick={() => onTabChange('drill')}
                 className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center space-x-1.5 cursor-pointer ${
-                  activeTab === 'drill'
+                  activeTab === 'drill' || (activeTab as string) === 'corpus'
                     ? 'bg-stone-800 text-amber-100 shadow-sm border border-stone-700/70'
                     : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800/50'
                 }`}
               >
                 <Eye className="w-4 h-4 text-amber-400" />
                 <span>Reading Studio</span>
-              </button>
-
-              <button
-                onClick={() => onTabChange('corpus')}
-                className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center space-x-1.5 cursor-pointer ${
-                  activeTab === 'corpus'
-                    ? 'bg-stone-800 text-amber-100 shadow-sm border border-stone-700/70'
-                    : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800/50'
-                }`}
-              >
-                <BookOpen className="w-4 h-4 text-amber-400" />
-                <span>Library</span>
               </button>
             </nav>
 

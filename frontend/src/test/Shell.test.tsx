@@ -29,7 +29,7 @@ describe('Shell Layout Component (Unit Tests)', () => {
 
     expect(screen.getByText('FocusReader')).toBeInTheDocument();
     expect(screen.getByText('Reading Studio')).toBeInTheDocument();
-    expect(screen.getByText('Library')).toBeInTheDocument();
+    expect(screen.queryByText('Library')).not.toBeInTheDocument();
     expect(screen.queryByText('Add Reading')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /My Progress/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Settings/i })).toBeInTheDocument();

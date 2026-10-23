@@ -23,6 +23,7 @@ import {
 interface CorpusLibraryProps {
   onSelectPassage: (passageId: string) => void;
   onNavigateIngest?: () => void;
+  onBack?: () => void;
 }
 
 const DOMAINS = [
@@ -48,6 +49,7 @@ const PAGE_SIZE = 6;
 export const CorpusLibrary: React.FC<CorpusLibraryProps> = ({
   onSelectPassage,
   onNavigateIngest,
+  onBack,
 }) => {
   const [passages, setPassages] = useState<CorpusPassage[]>([]);
   const [customDomains, setCustomDomains] = useState<string[]>([]);
@@ -265,9 +267,27 @@ export const CorpusLibrary: React.FC<CorpusLibraryProps> = ({
     <div className="w-full max-w-5xl mx-auto py-8 space-y-6">
       {/* View Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-stone-800/80 pb-5">
-        <h1 className="text-2xl sm:text-3xl font-bold text-stone-100 tracking-tight font-serif">
-          Articles & Stories
-        </h1>
+        <div className="flex items-center space-x-3">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              aria-label="Back to Reading Studio"
+              title="Back to Reading Studio"
+              className="p-2 rounded-xl border border-stone-700/80 bg-stone-900/70 hover:bg-stone-800 text-stone-300 hover:text-stone-100 transition-colors cursor-pointer"
+            >
+              <ChevronLeft className="w-4 h-4 text-amber-400" />
+            </button>
+          )}
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-stone-100 tracking-tight font-serif">
+              Articles & Stories
+            </h1>
+            <p className="text-xs text-stone-400 mt-0.5">
+              Choose a reading passage to practice in the studio
+            </p>
+          </div>
+        </div>
 
         <div className="flex items-center space-x-3 w-full sm:w-auto">
           <button

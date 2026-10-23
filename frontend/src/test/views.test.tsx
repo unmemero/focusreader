@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import App from '../App';
 import { CorpusLibrary } from '../components/corpus/CorpusLibrary';
 import { CorpusIngestion } from '../components/ingestion/CorpusIngestion';
 import { SettingsView } from '../components/settings/SettingsView';
@@ -67,6 +68,20 @@ describe('View Components', () => {
       const startBtn = screen.getByRole('button', { name: /Start Reading/i });
       fireEvent.click(startBtn);
       expect(onSelectPassage).toHaveBeenCalledWith('p-1');
+    });
+
+    it('renders back to studio button when onBack is provided and invokes callback', async () => {
+      vi.mocked(api.getPassages).mockResolvedValue([]);
+      const onBack = vi.fn();
+      render(<CorpusLibrary onSelectPassage={vi.fn()} onBack={onBack} />);
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /Back to Reading Studio/i })).toBeInTheDocument();
+      });
+
+      const backBtn = screen.getByRole('button', { name: /Back to Reading Studio/i });
+      fireEvent.click(backBtn);
+      expect(onBack).toHaveBeenCalled();
     });
   });
 
@@ -234,6 +249,48 @@ describe('View Components', () => {
       const reviewBtn = screen.getByRole('button', { name: /Review →/i });
       fireEvent.click(reviewBtn);
       expect(onSelectSession).toHaveBeenCalledWith('sess-abc-123');
+    });
+  });
+
+  describe('Reading Studio Flow in App', () => {
+    it('displays punchy phrase and navigates to library when clicking Choose a Reading Passage', async () => {
+      vi.mocked(api.getConfig).mockResolvedValue({
+        llm_base_url: 'http://localhost:8080',
+        llm_model: 'gemma-2-9b-it',
+        llm_timeout_seconds: 15,
+        is_llm_connected: true,
+      });
+      vi.mocked(api.getPassages).mockResolvedValue([
+        {
+          id: 'p-1',
+          title: 'Quantum Computation and Shor’s Algorithm',
+          domain: 'computer_science',
+          source_attribution: 'Peter Shor, 1994',
+          passage_text: 'Quantum algorithms enable polynomial time factoring...',
+          word_count: 280,
+          lexical_density_score: 0.62,
+        },
+      ]);
+
+      render(<App />);
+
+      // Verify Reading Studio title and punchy tagline
+      expect(screen.getByRole('heading', { name: 'Reading Studio' })).toBeInTheDocument();
+      expect(screen.getByText('Read faster. Focus deeper. Learn better.')).toBeInTheDocument();
+
+      // Click "Choose a Reading Passage"
+      const chooseBtn = screen.getByRole('button', { name: /Choose a Reading Passage/i });
+      fireEvent.click(chooseBtn);
+
+      // Verify the integrated library is displayed
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { name: 'Articles & Stories' })).toBeInTheDocument();
+      });
+
+      // Verify the Back to Reading Studio button works
+      const backBtn = screen.getByRole('button', { name: /Back to Reading Studio/i });
+      fireEvent.click(backBtn);
+      expect(screen.getByText('Read faster. Focus deeper. Learn better.')).toBeInTheDocument();
     });
   });
 });

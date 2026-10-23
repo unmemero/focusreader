@@ -16,6 +16,7 @@ import { Sparkles, AlertCircle, BookOpen, Shuffle } from 'lucide-react';
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState<'drill' | 'corpus' | 'analytics' | 'settings'>('drill');
+  const [isSelectingPassage, setIsSelectingPassage] = useState<boolean>(false);
   const [targetQuestion, setTargetQuestion] = useState<string>('');
   const [focusLens, setFocusLens] = useState<string>('bottleneck_tradeoff');
   const [isSubmittingStage, setIsSubmittingStage] = useState<boolean>(false);
@@ -98,6 +99,7 @@ function AppContent() {
   const handleSelectPassage = async (passageId: string) => {
     try {
       setReviewDetails(null);
+      setIsSelectingPassage(false);
       await startNewSession(passageId);
       setActiveTab('drill');
     } catch (e) {
@@ -120,14 +122,27 @@ function AppContent() {
     try {
       const details = await api.getSession(sessionId);
       setReviewDetails(details);
+      setIsSelectingPassage(false);
       setActiveTab('drill');
     } catch (e) {
       console.error('Failed to review session:', e);
     }
   };
 
+  const handleTabChange = (tab: 'drill' | 'corpus' | 'analytics' | 'settings') => {
+    if (tab === 'corpus') {
+      setActiveTab('drill');
+      setIsSelectingPassage(true);
+      return;
+    }
+    setActiveTab(tab);
+    if (tab === 'drill' && !activeSession) {
+      setIsSelectingPassage(false);
+    }
+  };
+
   return (
-    <Shell activeTab={activeTab} onTabChange={setActiveTab}>
+    <Shell activeTab={activeTab} onTabChange={handleTabChange}>
       {error && (
         <div className="mb-4 p-3.5 bg-rose-950/50 border border-rose-800 rounded-xl flex items-center space-x-2 text-rose-200 text-xs font-medium">
           <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
@@ -137,19 +152,26 @@ function AppContent() {
 
       {/* Main Tab Views */}
       {activeTab === 'drill' && (
-        <div className="flex-1 flex flex-col items-center justify-center">
+        <div className="flex-1 flex flex-col items-center justify-center w-full">
           {/* If reviewing a past session from analytics */}
           {reviewDetails ? (
             <SessionResults
               sessionDetails={reviewDetails}
               onRestart={() => {
                 setReviewDetails(null);
-                setActiveTab('corpus');
+                resetActiveSession();
+                setIsSelectingPassage(true);
               }}
               onGoToAnalytics={() => {
                 setReviewDetails(null);
                 setActiveTab('analytics');
               }}
+            />
+          ) : isSelectingPassage ? (
+            /* Integrated Library View inside Reading Studio */
+            <CorpusLibrary
+              onSelectPassage={handleSelectPassage}
+              onBack={() => setIsSelectingPassage(false)}
             />
           ) : !activeSession || !activePassage ? (
             /* Empty State / Welcome Screen */
@@ -160,12 +182,12 @@ function AppContent() {
               <h2 className="text-xl font-bold text-stone-100 tracking-tight mb-2 font-serif">
                 Reading Studio
               </h2>
-              <p className="text-xs text-stone-400 mb-6 leading-relaxed">
-                Guided reading practice to build focus, pace, and deep comprehension.
+              <p className="text-xs text-stone-400 mb-6 leading-relaxed font-medium">
+                Read faster. Focus deeper. Learn better.
               </p>
               <div className="space-y-3">
                 <button
-                  onClick={() => setActiveTab('corpus')}
+                  onClick={() => setIsSelectingPassage(true)}
                   className="w-full py-3 px-4 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-semibold text-xs transition-all shadow-lg shadow-amber-700/20 flex items-center justify-center space-x-2 cursor-pointer"
                 >
                   <BookOpen className="w-3.5 h-3.5" />
@@ -189,7 +211,7 @@ function AppContent() {
                   onStartReading={handleStartReading}
                   onBackToLibrary={() => {
                     resetActiveSession();
-                    setActiveTab('corpus');
+                    setIsSelectingPassage(true);
                   }}
                 />
               )}
@@ -226,7 +248,7 @@ function AppContent() {
                   sessionDetails={sessionDetails}
                   onRestart={() => {
                     resetActiveSession();
-                    setActiveTab('corpus');
+                    setIsSelectingPassage(true);
                   }}
                   onGoToAnalytics={() => {
                     resetActiveSession();
@@ -246,7 +268,12 @@ function AppContent() {
       {activeTab === 'analytics' && (
         <AnalyticsDashboard
           onSelectSession={handleReviewHistoricSession}
-          onStartNewDrill={() => setActiveTab('corpus')}
+          onStartNewDrill={() => {
+            setReviewDetails(null);
+            resetActiveSession();
+            setActiveTab('drill');
+            setIsSelectingPassage(true);
+          }}
         />
       )}
 
