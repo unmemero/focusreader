@@ -47,7 +47,7 @@ describe('Shell Layout Component (Unit Tests)', () => {
     const statusElem = screen.getByRole('status');
     expect(statusElem).toHaveAttribute('aria-label', expect.stringContaining('AI Coach Online'));
     const sparkIcon = statusElem.querySelector('svg');
-    expect(sparkIcon).toHaveClass('sparkle-twinkle', 'text-emerald-400');
+    expect(sparkIcon).toHaveClass('ai-pulse', 'text-green-500');
   });
 
   it('renders greyed out frameless AI spark when offline', async () => {
@@ -72,6 +72,6 @@ describe('Shell Layout Component (Unit Tests)', () => {
     expect(statusElem).toHaveAttribute('aria-label', expect.stringContaining('AI Coach Offline'));
     const sparkIcon = statusElem.querySelector('svg');
     expect(sparkIcon).toHaveClass('text-stone-500');
-    expect(sparkIcon).not.toHaveClass('sparkle-twinkle');
+    expect(sparkIcon).not.toHaveClass('ai-pulse');
   });
 });

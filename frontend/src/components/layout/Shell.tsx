@@ -143,7 +143,7 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
             <Sparkles
               className={`w-5 h-5 transition-colors duration-300 ${
                 config?.is_llm_connected
-                  ? 'text-emerald-400 sparkle-twinkle'
+                  ? 'text-green-500 dark:text-green-400 ai-pulse'
                   : 'text-stone-500 opacity-40'
               }`}
             />

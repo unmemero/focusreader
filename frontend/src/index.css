@@ -335,31 +335,21 @@ html:active-view-transition-type(backward)::view-transition-new(root) {
   animation-name: slide-from-left;
 }
 
-@keyframes twinkle {
+@keyframes ai-pulse {
   0%, 100% {
     opacity: 1;
-    transform: scale(1) rotate(0deg);
-    filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0.45));
-  }
-  25% {
-    opacity: 0.7;
-    transform: scale(0.9) rotate(-6deg);
-    filter: drop-shadow(0 0 1px rgba(16, 185, 129, 0.2));
+    transform: scale(1);
+    filter: drop-shadow(0 0 2px rgba(34, 197, 94, 0.45));
   }
   50% {
-    opacity: 1;
-    transform: scale(1.16) rotate(8deg);
-    filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.85));
-  }
-  75% {
-    opacity: 0.8;
-    transform: scale(0.96) rotate(-3deg);
-    filter: drop-shadow(0 0 3px rgba(16, 185, 129, 0.35));
+    opacity: 0.55;
+    transform: scale(0.91);
+    filter: drop-shadow(0 0 7px rgba(34, 197, 94, 0.85));
   }
 }
 
-.sparkle-twinkle {
-  animation: twinkle 2.2s ease-in-out infinite;
+.ai-pulse {
+  animation: ai-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes fade-in-up {
@@ -400,7 +390,7 @@ html:active-view-transition-type(backward)::view-transition-new(root) {
     transition-duration: 0.1s;
   }
 
-  .sparkle-twinkle {
+  .ai-pulse {
     animation: none !important;
   }
 
