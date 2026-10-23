@@ -8,7 +8,6 @@ import {
   Settings,
   Eye,
   Activity,
-  Sparkles,
   Sun,
   Moon,
 } from 'lucide-react';
@@ -125,28 +124,24 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
             </div>
           </div>
 
-          {/* Frameless AI Spark separated to the very edge of the screen */}
+          {/* AI Status Dot at the very edge of the screen */}
           <div
             role="status"
-            aria-label={
-              config?.is_llm_connected
-                ? `AI Coach Online (${config.llm_model})`
-                : 'AI Coach Offline (Practice Mode)'
-            }
-            title={
-              config?.is_llm_connected
-                ? `AI Coach Online (${config.llm_model})`
-                : 'AI Coach Offline (Practice Mode)'
-            }
-            className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-default select-none pointer-events-auto"
+            aria-label={config?.is_llm_connected ? 'AI connected' : 'AI disconnected'}
+            title={config?.is_llm_connected ? 'AI connected' : 'AI disconnected'}
+            className="group absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-default select-none pointer-events-auto p-1.5"
           >
-            <Sparkles
-              className={`w-5 h-5 transition-colors duration-300 ${
+            <span
+              className={`w-2 h-2 rounded-full transition-colors duration-300 ${
                 config?.is_llm_connected
-                  ? 'text-green-500 dark:text-green-400 ai-pulse'
-                  : 'text-stone-500 opacity-40'
+                  ? 'bg-green-500 ai-pulse'
+                  : 'bg-stone-500 opacity-40'
               }`}
             />
+            {/* Hover Tooltip */}
+            <span className="pointer-events-none absolute right-full mr-2 hidden sm:block opacity-0 group-hover:opacity-100 transition-opacity duration-150 px-2 py-0.5 rounded text-[11px] font-sans font-medium whitespace-nowrap bg-stone-900 border border-stone-700 text-stone-200 shadow-lg">
+              {config?.is_llm_connected ? 'AI connected' : 'AI disconnected'}
+            </span>
           </div>
         </header>
       )}

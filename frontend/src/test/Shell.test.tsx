@@ -43,14 +43,15 @@ describe('Shell Layout Component (Unit Tests)', () => {
     fireEvent.click(screen.getByRole('button', { name: /Settings/i }));
     expect(onTabChange).toHaveBeenCalledWith('settings');
 
-    // Verify online frameless AI spark is displayed
+    // Verify online AI dot is displayed with "AI connected" hover status
     const statusElem = screen.getByRole('status');
-    expect(statusElem).toHaveAttribute('aria-label', expect.stringContaining('AI Coach Online'));
-    const sparkIcon = statusElem.querySelector('svg');
-    expect(sparkIcon).toHaveClass('ai-pulse', 'text-green-500');
+    expect(statusElem).toHaveAttribute('aria-label', 'AI connected');
+    expect(statusElem).toHaveAttribute('title', 'AI connected');
+    const dot = statusElem.querySelector('span');
+    expect(dot).toHaveClass('ai-pulse', 'bg-green-500');
   });
 
-  it('renders greyed out frameless AI spark when offline', async () => {
+  it('renders greyed out AI dot with "AI disconnected" status when offline', async () => {
     vi.spyOn(api, 'getConfig').mockResolvedValue({
       llm_base_url: 'http://localhost:8080',
       llm_model: 'gemma-2-9b-it',
@@ -69,9 +70,10 @@ describe('Shell Layout Component (Unit Tests)', () => {
     });
 
     const statusElem = screen.getByRole('status');
-    expect(statusElem).toHaveAttribute('aria-label', expect.stringContaining('AI Coach Offline'));
-    const sparkIcon = statusElem.querySelector('svg');
-    expect(sparkIcon).toHaveClass('text-stone-500');
-    expect(sparkIcon).not.toHaveClass('ai-pulse');
+    expect(statusElem).toHaveAttribute('aria-label', 'AI disconnected');
+    expect(statusElem).toHaveAttribute('title', 'AI disconnected');
+    const dot = statusElem.querySelector('span');
+    expect(dot).toHaveClass('bg-stone-500');
+    expect(dot).not.toHaveClass('ai-pulse');
   });
 });
