@@ -66,7 +66,7 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
                     : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800/50'
                 }`}
               >
-                <BookOpen className="w-4 h-4 text-emerald-400" />
+                <BookOpen className="w-4 h-4 text-amber-400" />
                 <span>Library</span>
               </button>
             </nav>
@@ -80,11 +80,11 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
                 title="My Progress"
                 className={`p-2 rounded-lg border transition-all duration-150 cursor-pointer ${
                   activeTab === 'analytics'
-                    ? 'border-teal-500 bg-teal-950/60 text-teal-300 shadow-sm ring-1 ring-teal-500/40'
-                    : 'border-stone-700 bg-stone-800 text-teal-400 hover:bg-stone-700 hover:text-teal-300 hover:border-teal-500/60 shadow-xs active:scale-95'
+                    ? 'border-amber-500/70 bg-amber-950/40 text-amber-300 shadow-sm ring-1 ring-amber-500/30'
+                    : 'border-stone-700 bg-stone-800 text-amber-400 hover:bg-stone-700 hover:text-amber-300 hover:border-amber-500/50 shadow-xs active:scale-95'
                 }`}
               >
-                <BarChart2 className="w-4 h-4" />
+                <BarChart2 className="w-4 h-4 text-amber-400" />
                 <span className="sr-only">My Progress</span>
               </button>
 
@@ -95,11 +95,11 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
                 title="Settings"
                 className={`p-2 rounded-lg border transition-all duration-150 cursor-pointer ${
                   activeTab === 'settings'
-                    ? 'border-amber-500 bg-amber-950/60 text-amber-300 shadow-sm ring-1 ring-amber-500/40'
-                    : 'border-stone-700 bg-stone-800 text-amber-400 hover:bg-stone-700 hover:text-amber-300 hover:border-amber-500/60 shadow-xs active:scale-95'
+                    ? 'border-amber-500/70 bg-amber-950/40 text-amber-300 shadow-sm ring-1 ring-amber-500/30'
+                    : 'border-stone-700 bg-stone-800 text-amber-400 hover:bg-stone-700 hover:text-amber-300 hover:border-amber-500/50 shadow-xs active:scale-95'
                 }`}
               >
-                <Settings className="w-4 h-4" />
+                <Settings className="w-4 h-4 text-amber-400" />
                 <span className="sr-only">Settings</span>
               </button>
 
@@ -114,12 +114,12 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
                     ? 'Switch to Warm Paper (Light Mode)'
                     : 'Switch to Cozy Library Night (Dark Mode)'
                 }
-                className="p-2 rounded-lg border border-stone-700 bg-stone-800 hover:bg-stone-700 text-stone-200 hover:text-stone-50 hover:border-stone-500 shadow-xs transition-all duration-150 active:scale-95 cursor-pointer"
+                className="p-2 rounded-lg border border-stone-700 bg-stone-800 hover:bg-stone-700 text-amber-400 hover:text-amber-300 hover:border-amber-500/50 shadow-xs transition-all duration-150 active:scale-95 cursor-pointer"
               >
                 {resolvedScheme === 'dark' ? (
                   <Sun className="w-4 h-4 text-amber-400" />
                 ) : (
-                  <Moon className="w-4 h-4 text-amber-200" />
+                  <Moon className="w-4 h-4 text-amber-400" />
                 )}
               </button>
             </div>

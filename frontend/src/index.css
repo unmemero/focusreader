@@ -337,19 +337,17 @@ html:active-view-transition-type(backward)::view-transition-new(root) {
 
 @keyframes ai-pulse {
   0%, 100% {
-    opacity: 1;
+    opacity: 0.95;
     transform: scale(1);
-    filter: drop-shadow(0 0 2px rgba(34, 197, 94, 0.45));
   }
   50% {
-    opacity: 0.55;
-    transform: scale(0.91);
-    filter: drop-shadow(0 0 7px rgba(34, 197, 94, 0.85));
+    opacity: 0.65;
+    transform: scale(0.96);
   }
 }
 
 .ai-pulse {
-  animation: ai-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: ai-pulse 3.5s ease-in-out infinite;
 }
 
 @keyframes fade-in-up {
