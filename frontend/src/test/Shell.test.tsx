@@ -1,6 +1,6 @@
 /// <reference types="@testing-library/jest-dom/vitest" />
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 import { Shell } from '../components/layout/Shell';
 import { SessionProvider } from '../context/SessionContext';
 
@@ -31,8 +31,16 @@ describe('Shell Layout Component (Unit Tests)', () => {
     expect(screen.getByText('Reading Studio')).toBeInTheDocument();
     expect(screen.getByText('Library')).toBeInTheDocument();
     expect(screen.queryByText('Add Reading')).not.toBeInTheDocument();
-    expect(screen.getByText('My Progress')).toBeInTheDocument();
-    expect(screen.getByText('Settings')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /My Progress/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Settings/i })).toBeInTheDocument();
     expect(screen.getByText('Child Viewport Content')).toBeInTheDocument();
+
+    // Verify clicking chart icon triggers onTabChange('analytics')
+    fireEvent.click(screen.getByRole('button', { name: /My Progress/i }));
+    expect(onTabChange).toHaveBeenCalledWith('analytics');
+
+    // Verify clicking settings icon triggers onTabChange('settings')
+    fireEvent.click(screen.getByRole('button', { name: /Settings/i }));
+    expect(onTabChange).toHaveBeenCalledWith('settings');
   });
 });

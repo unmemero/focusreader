@@ -69,34 +69,40 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
                 <BookOpen className="w-4 h-4 text-emerald-400" />
                 <span>Library</span>
               </button>
-
-              <button
-                onClick={() => onTabChange('analytics')}
-                className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center space-x-1.5 cursor-pointer ${
-                  activeTab === 'analytics'
-                    ? 'bg-stone-800 text-amber-100 shadow-sm border border-stone-700/70'
-                    : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800/50'
-                }`}
-              >
-                <BarChart2 className="w-4 h-4 text-teal-400" />
-                <span>My Progress</span>
-              </button>
-
-              <button
-                onClick={() => onTabChange('settings')}
-                className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center space-x-1.5 cursor-pointer ${
-                  activeTab === 'settings'
-                    ? 'bg-stone-800 text-amber-100 shadow-sm border border-stone-700/70'
-                    : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800/50'
-                }`}
-              >
-                <Settings className="w-4 h-4 text-stone-400" />
-                <span>Settings</span>
-              </button>
             </nav>
 
-            {/* Theme Toggle & Status Indicator */}
-            <div className="flex items-center space-x-2.5 text-xs font-medium">
+            {/* Right Controls: Analytics, Settings, Theme Toggle & Status Indicator */}
+            <div className="flex items-center space-x-2 text-xs font-medium">
+              <button
+                type="button"
+                onClick={() => onTabChange('analytics')}
+                aria-label="My Progress"
+                title="My Progress"
+                className={`p-2 rounded-lg border transition-colors cursor-pointer ${
+                  activeTab === 'analytics'
+                    ? 'border-teal-500/60 bg-stone-800 text-teal-300 shadow-sm'
+                    : 'border-stone-700/80 bg-stone-800/60 hover:bg-stone-800 text-stone-400 hover:text-stone-200'
+                }`}
+              >
+                <BarChart2 className="w-4 h-4" />
+                <span className="sr-only">My Progress</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onTabChange('settings')}
+                aria-label="Settings"
+                title="Settings"
+                className={`p-2 rounded-lg border transition-colors cursor-pointer ${
+                  activeTab === 'settings'
+                    ? 'border-amber-500/60 bg-stone-800 text-amber-300 shadow-sm'
+                    : 'border-stone-700/80 bg-stone-800/60 hover:bg-stone-800 text-stone-400 hover:text-stone-200'
+                }`}
+              >
+                <Settings className="w-4 h-4" />
+                <span className="sr-only">Settings</span>
+              </button>
+
               <button
                 type="button"
                 onClick={toggle}
