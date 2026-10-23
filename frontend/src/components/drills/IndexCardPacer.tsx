@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import type { CorpusPassage } from '../../types';
-import { EyeOff, Flag } from 'lucide-react';
+import { Flag } from 'lucide-react';
 
 interface IndexCardPacerProps {
   passage: CorpusPassage;
@@ -97,9 +97,10 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
 
   return (
     <div className="w-full max-w-3xl mx-auto py-6" ref={containerRef}>
-      {/* Sticky Pacer Telemetry Bar */}
+      {/* Sticky Pacer Telemetry & Control Guides Bar */}
       <div className="sticky top-4 z-30 bg-stone-900/90 border border-stone-800 rounded-2xl p-4 mb-6 backdrop-blur-md shadow-xl transition-colors">
-        <div className="flex items-center justify-between gap-4 text-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          {/* Telemetry Stats */}
           <div className="flex items-center gap-6">
             <div className="flex flex-col">
               <span className="text-[11px] text-stone-400 font-medium">Elapsed Time</span>
@@ -121,8 +122,32 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
             </div>
           </div>
 
-          <div className="text-[11px] text-stone-400 flex items-center space-x-1.5">
-            <span>Press <kbd className="px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 text-stone-300 font-mono text-[10px]">↓</kbd> or click to move to next</span>
+          {/* Top Control Guides */}
+          <div className="flex flex-wrap items-center gap-3 text-xs font-medium text-stone-400">
+            <span className="flex items-center space-x-1">
+              <kbd className="px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 text-stone-200 text-[11px]">
+                ↓
+              </kbd>{' '}
+              <span>/</span>{' '}
+              <kbd className="px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 text-stone-200 text-[11px]">
+                Click
+              </kbd>
+              <span>Next Line</span>
+            </span>
+
+            <span className="flex items-center space-x-1">
+              <kbd className="px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 text-stone-200 text-[11px]">
+                Space
+              </kbd>
+              <span>Lost My Place</span>
+            </span>
+
+            <span className="flex items-center space-x-1">
+              <kbd className="px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 text-stone-200 text-[11px]">
+                Ctrl+Enter
+              </kbd>
+              <span>Finish</span>
+            </span>
           </div>
         </div>
 
@@ -180,47 +205,6 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
               </div>
             );
           })}
-        </div>
-      </div>
-
-      {/* Pacer Navigation Footer & Keyboard Shortcuts */}
-      <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-xl bg-stone-900/50 border border-stone-800 text-xs font-medium text-stone-400">
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="flex items-center space-x-1">
-            <kbd className="px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 text-stone-200">
-              ↓
-            </kbd>{' '}
-            <span>/</span>{' '}
-            <kbd className="px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 text-stone-200">
-              Click
-            </kbd>
-            <span>Next Line</span>
-          </span>
-
-          <span className="flex items-center space-x-1">
-            <kbd className="px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 text-stone-200">
-              Space
-            </kbd>
-            <span>Lost My Place</span>
-          </span>
-
-          <span className="flex items-center space-x-1">
-            <kbd className="px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 text-stone-200">
-              Ctrl+Enter
-            </kbd>
-            <span>Finish</span>
-          </span>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <button
-            type="button"
-            onClick={triggerDrift}
-            className="px-3 py-1.5 rounded-lg border border-amber-500/35 bg-amber-500/15 text-amber-300 hover:bg-amber-500/25 text-xs font-medium transition-colors flex items-center space-x-1 cursor-pointer"
-          >
-            <EyeOff className="w-3.5 h-3.5" />
-            <span>Lost My Place (Focus Break)</span>
-          </button>
         </div>
       </div>
     </div>

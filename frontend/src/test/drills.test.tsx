@@ -85,17 +85,19 @@ describe('Drill Pipeline Components', () => {
 
       expect(screen.getByText(/Elapsed Time/)).toBeInTheDocument();
       expect(screen.getByText(/Focus Breaks/)).toBeInTheDocument();
-      expect(screen.getByText(/or click to move to next/i)).toBeInTheDocument();
+      expect(screen.getByText('Next Line')).toBeInTheDocument();
+      expect(screen.getByText('Lost My Place')).toBeInTheDocument();
+      expect(screen.getByText('Finish')).toBeInTheDocument();
       expect(screen.queryByText(/Current Line/)).not.toBeInTheDocument();
       expect(screen.queryByText(/Step 2: Guided Reading/)).not.toBeInTheDocument();
 
-      // Click drift button
-      const driftBtn = screen.getByRole('button', { name: /Lost My Place/i });
-      fireEvent.click(driftBtn);
-      expect(onRecordDrift).toHaveBeenCalled();
-
-      // Verify Finished Reading button is removed
+      // Verify Lost My Place and Finished Reading buttons are removed
+      expect(screen.queryByRole('button', { name: /Lost My Place/i })).not.toBeInTheDocument();
       expect(screen.queryByRole('button', { name: /Finished Reading/i })).not.toBeInTheDocument();
+
+      // Press Space for drift (focus break)
+      fireEvent.keyDown(window, { code: 'Space' });
+      expect(onRecordDrift).toHaveBeenCalled();
 
       // Finish reading via Ctrl+Enter shortcut
       fireEvent.keyDown(window, { key: 'Enter', ctrlKey: true });
