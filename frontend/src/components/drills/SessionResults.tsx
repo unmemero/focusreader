@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import type { SessionDetailResponse } from '../../types';
+import { useTutorial } from '../../context/TutorialContext';
 import { formatTopicLabel } from '../../lib/difficulty';
 import {
   Award,
@@ -30,6 +31,7 @@ export const SessionResults: React.FC<SessionResultsProps> = ({
   onRestart,
   onGoToAnalytics,
 }) => {
+  const { advanceIfCurrent } = useTutorial();
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [isSavedAnswersOpen, setIsSavedAnswersOpen] = useState<boolean>(false);
 
@@ -40,8 +42,14 @@ export const SessionResults: React.FC<SessionResultsProps> = ({
   const isOffline = evalResult?.evaluation_status === 'offline_skipped';
 
   const advanceSlide = useCallback(() => {
-    setCurrentSlide((prev) => Math.min(TOTAL_SLIDES - 1, prev + 1));
-  }, []);
+    setCurrentSlide((prev) => {
+      const next = Math.min(TOTAL_SLIDES - 1, prev + 1);
+      if (next === TOTAL_SLIDES - 1) {
+        advanceIfCurrent('results_slides');
+      }
+      return next;
+    });
+  }, [advanceIfCurrent]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -213,7 +221,7 @@ export const SessionResults: React.FC<SessionResultsProps> = ({
       </div>
 
       {/* Presentation Slide Stage */}
-      <div className="bg-stone-900/40 border border-stone-800 rounded-2xl p-6 sm:p-8 min-h-[280px] flex flex-col justify-between shadow-xl">
+      <div data-tour="session-results-slide" className="bg-stone-900/40 border border-stone-800 rounded-2xl p-6 sm:p-8 min-h-[280px] flex flex-col justify-between shadow-xl">
         <div key={currentSlide} className="slide-fade-up flex-1 flex flex-col">
           {/* Slide 1: Reading Summary */}
           {currentSlide === 0 && (
@@ -434,7 +442,11 @@ export const SessionResults: React.FC<SessionResultsProps> = ({
       {/* Action Footer */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
         <button
-          onClick={onGoToAnalytics}
+          data-tour="view-my-progress-btn"
+          onClick={() => {
+            advanceIfCurrent('results_progress');
+            onGoToAnalytics();
+          }}
           className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-stone-700/80 hover:bg-stone-800 text-stone-300 font-medium text-xs transition-colors flex items-center justify-center space-x-2 cursor-pointer"
         >
           <BarChart3 className="w-4 h-4" />

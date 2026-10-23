@@ -45,7 +45,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   }, []);
 
   return (
-    <div className="w-full max-w-5xl mx-auto py-8 space-y-8">
+    <div data-tour="analytics-dashboard" className="w-full max-w-5xl mx-auto py-8 space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-stone-800 pb-6">
         <div>

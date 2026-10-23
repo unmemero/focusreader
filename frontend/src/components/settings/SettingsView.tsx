@@ -106,7 +106,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onConfigUpdated }) =
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto py-8 space-y-6">
+    <div data-tour="settings-view" className="w-full max-w-2xl mx-auto py-8 space-y-6">
       {/* Reading Theme / Appearance Card */}
       <div className="bg-stone-900/60 border border-stone-800 rounded-2xl p-6 sm:p-8 backdrop-blur-sm shadow-xl">
         <div className="flex items-center space-x-2 text-amber-400 font-semibold text-xs mb-2">

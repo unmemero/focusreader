@@ -300,6 +300,7 @@ export const CorpusLibrary: React.FC<CorpusLibraryProps> = ({
 
           <button
             onClick={openAddModal}
+            data-tour="add-reading-btn"
             className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 text-xs font-semibold transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer"
           >
             <PlusCircle className="w-3.5 h-3.5" />
@@ -309,7 +310,7 @@ export const CorpusLibrary: React.FC<CorpusLibraryProps> = ({
       </div>
 
       {/* Single-Line Domain, Level & Order Selectors */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div data-tour="library-filters" className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-4">
           {/* Domain Selector */}
           <div className="flex items-center space-x-2">
@@ -427,6 +428,7 @@ export const CorpusLibrary: React.FC<CorpusLibraryProps> = ({
                   >
                     <button
                       type="button"
+                      data-tour="passage-toggle-btn"
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleExpanded(passage.id);
@@ -465,6 +467,7 @@ export const CorpusLibrary: React.FC<CorpusLibraryProps> = ({
 
                   <button
                     type="button"
+                    data-tour="start-reading-btn"
                     onClick={() => onSelectPassage(passage.id)}
                     className="px-3.5 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-stone-950 font-semibold text-xs transition-colors flex items-center space-x-1.5 cursor-pointer shadow-sm shrink-0"
                   >

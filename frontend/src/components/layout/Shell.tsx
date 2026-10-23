@@ -2,6 +2,7 @@ import React from 'react';
 import type { ReactNode } from 'react';
 import { useSession } from '../../hooks/useSession';
 import { useColorScheme } from '../../lib/theme';
+import { useTutorial } from '../../context/TutorialContext';
 import {
   BookOpen,
   BarChart2,
@@ -10,6 +11,7 @@ import {
   Activity,
   Sun,
   Moon,
+  HelpCircle,
 } from 'lucide-react';
 
 interface ShellProps {
@@ -21,6 +23,7 @@ interface ShellProps {
 export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }) => {
   const { isDistractionFree, config, activeSession } = useSession();
   const { resolvedScheme, toggle } = useColorScheme();
+  const { startTour } = useTutorial();
 
   return (
     <div className="min-h-screen bg-[var(--bg-canvas)] text-stone-100 flex flex-col font-sans selection:bg-amber-500/30 selection:text-amber-100 transition-colors duration-200">
@@ -46,6 +49,7 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
             {/* Navigation Tabs */}
             <nav className="flex items-center space-x-1 sm:space-x-2">
               <button
+                data-tour="reading-studio-tab"
                 onClick={() => onTabChange('drill')}
                 className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center space-x-1.5 cursor-pointer ${
                   activeTab === 'drill' || (activeTab as string) === 'corpus'
@@ -61,6 +65,7 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
             {/* Right Action Buttons in original relative position: Analytics, Settings, Theme Toggle */}
             <div className="flex items-center space-x-2 text-xs font-medium mr-10 xl:mr-0">
               <button
+                data-tour="my-progress-btn"
                 type="button"
                 onClick={() => onTabChange('analytics')}
                 aria-label="My Progress"
@@ -76,6 +81,7 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
               </button>
 
               <button
+                data-tour="settings-btn"
                 type="button"
                 onClick={() => onTabChange('settings')}
                 aria-label="Settings"
@@ -88,6 +94,18 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
               >
                 <Settings className="w-4 h-4 text-amber-400" />
                 <span className="sr-only">Settings</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={startTour}
+                data-tour="guide-tour-btn"
+                aria-label="Start Guided Tour"
+                title="Start Guided Tour"
+                className="p-2 rounded-lg border border-stone-700 bg-stone-800 hover:bg-stone-700 text-amber-400 hover:text-amber-300 hover:border-amber-500/50 shadow-xs transition-all duration-150 active:scale-95 cursor-pointer"
+              >
+                <HelpCircle className="w-4 h-4 text-amber-400" />
+                <span className="sr-only">Start Guided Tour</span>
               </button>
 
               <button

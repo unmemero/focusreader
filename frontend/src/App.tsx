@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { SessionProvider } from './context/SessionContext';
+import { TutorialProvider, useTutorial, type TourStep } from './context/TutorialContext';
+import { TutorialOverlay } from './components/tutorial/TutorialOverlay';
 import { useSession } from './hooks/useSession';
 import { Shell } from './components/layout/Shell';
 import { PreFlightIntent } from './components/drills/PreFlightIntent';
@@ -14,9 +16,22 @@ import { api } from './lib/api';
 import type { SessionDetailResponse, SubmitDebriefRequest } from './types';
 import { Sparkles, AlertCircle, BookOpen, Shuffle } from 'lucide-react';
 
-function AppContent() {
-  const [activeTab, setActiveTab] = useState<'drill' | 'corpus' | 'analytics' | 'settings'>('drill');
-  const [isSelectingPassage, setIsSelectingPassage] = useState<boolean>(false);
+interface AppContentProps {
+  activeTab: 'drill' | 'corpus' | 'analytics' | 'settings';
+  setActiveTab: (tab: 'drill' | 'corpus' | 'analytics' | 'settings') => void;
+  isSelectingPassage: boolean;
+  setIsSelectingPassage: (val: boolean) => void;
+  onTabChange: (tab: 'drill' | 'corpus' | 'analytics' | 'settings') => void;
+}
+
+function AppContent({
+  activeTab,
+  setActiveTab,
+  isSelectingPassage,
+  setIsSelectingPassage,
+  onTabChange,
+}: AppContentProps) {
+  const { advanceIfCurrent } = useTutorial();
   const [targetQuestion, setTargetQuestion] = useState<string>('');
   const [focusLens, setFocusLens] = useState<string>('bottleneck_tradeoff');
   const [isSubmittingStage, setIsSubmittingStage] = useState<boolean>(false);
@@ -46,6 +61,7 @@ function AppContent() {
     try {
       await advanceStage('active_reading');
       toggleDistractionFree(true);
+      advanceIfCurrent('intent_start');
     } catch (e) {
       console.error('Failed to advance to active_reading:', e);
     }
@@ -57,6 +73,7 @@ function AppContent() {
       toggleDistractionFree(false);
       await finishReadingPhase(durationSeconds);
       await advanceStage('intent_recall');
+      advanceIfCurrent('pacer_finish');
     } catch (e) {
       console.error('Failed to finish reading phase:', e);
     }
@@ -74,6 +91,7 @@ function AppContent() {
         response_latency_seconds: latencySeconds,
       });
       await advanceStage('debrief');
+      advanceIfCurrent('recall_proceed');
     } catch (e) {
       console.error('Failed to submit intent synthesis:', e);
     } finally {
@@ -88,6 +106,7 @@ function AppContent() {
     try {
       await api.submitDebrief(activeSession.id, data);
       await advanceStage('completed');
+      advanceIfCurrent('debrief_complete');
     } catch (e) {
       console.error('Failed to submit structural debrief:', e);
     } finally {
@@ -102,6 +121,7 @@ function AppContent() {
       setIsSelectingPassage(false);
       await startNewSession(passageId);
       setActiveTab('drill');
+      advanceIfCurrent('library_select');
     } catch (e) {
       console.error('Failed to start session with passage:', e);
     }
@@ -129,20 +149,8 @@ function AppContent() {
     }
   };
 
-  const handleTabChange = (tab: 'drill' | 'corpus' | 'analytics' | 'settings') => {
-    if (tab === 'corpus') {
-      setActiveTab('drill');
-      setIsSelectingPassage(true);
-      return;
-    }
-    setActiveTab(tab);
-    if (tab === 'drill' && !activeSession) {
-      setIsSelectingPassage(false);
-    }
-  };
-
   return (
-    <Shell activeTab={activeTab} onTabChange={handleTabChange}>
+    <Shell activeTab={activeTab} onTabChange={onTabChange}>
       {error && (
         <div className="mb-4 p-3.5 bg-rose-950/50 border border-rose-800 rounded-xl flex items-center space-x-2 text-rose-200 text-xs font-medium">
           <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
@@ -187,7 +195,11 @@ function AppContent() {
               </p>
               <div className="space-y-3">
                 <button
-                  onClick={() => setIsSelectingPassage(true)}
+                  data-tour="choose-reading-btn"
+                  onClick={() => {
+                    setIsSelectingPassage(true);
+                    advanceIfCurrent('welcome_choose');
+                  }}
                   className="w-full py-3 px-4 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-semibold text-xs transition-all shadow-lg shadow-amber-700/20 flex items-center justify-center space-x-2 cursor-pointer"
                 >
                   <BookOpen className="w-3.5 h-3.5" />
@@ -282,10 +294,49 @@ function AppContent() {
   );
 }
 
+function AppRoot() {
+  const [activeTab, setActiveTab] = useState<'drill' | 'corpus' | 'analytics' | 'settings'>('drill');
+  const [isSelectingPassage, setIsSelectingPassage] = useState<boolean>(false);
+
+  const handleTabChange = useCallback((tab: 'drill' | 'corpus' | 'analytics' | 'settings') => {
+    if (tab === 'corpus') {
+      setActiveTab('drill');
+      setIsSelectingPassage(true);
+      return;
+    }
+    setActiveTab(tab);
+  }, []);
+
+  const handleStepChange = useCallback((step: TourStep) => {
+    if (step.id.startsWith('library_')) {
+      setActiveTab('drill');
+      setIsSelectingPassage(true);
+    } else if (step.id === 'welcome_choose') {
+      setActiveTab('drill');
+      setIsSelectingPassage(false);
+    } else if (step.targetTab) {
+      setActiveTab(step.targetTab);
+    }
+  }, []);
+
+  return (
+    <TutorialProvider onStepChange={handleStepChange} onNavigateTab={handleTabChange}>
+      <AppContent
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        isSelectingPassage={isSelectingPassage}
+        setIsSelectingPassage={setIsSelectingPassage}
+        onTabChange={handleTabChange}
+      />
+      <TutorialOverlay />
+    </TutorialProvider>
+  );
+}
+
 export default function App() {
   return (
     <SessionProvider>
-      <AppContent />
+      <AppRoot />
     </SessionProvider>
   );
 }

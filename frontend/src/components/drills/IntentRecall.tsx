@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTutorial } from '../../context/TutorialContext';
 import { Target, Timer, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 
 interface IntentRecallProps {
@@ -18,6 +19,7 @@ export const IntentRecall: React.FC<IntentRecallProps> = ({
   isSubmitting = false,
   onSubmitRecall,
 }) => {
+  const { advanceIfCurrent } = useTutorial();
   const [synthesis, setSynthesis] = useState<string>('');
   const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
   const [isTimerLocked, setIsTimerLocked] = useState<boolean>(false);
@@ -43,10 +45,18 @@ export const IntentRecall: React.FC<IntentRecallProps> = ({
     Math.round((elapsedSeconds / TOTAL_RECALL_PACER_SECONDS) * 100)
   );
 
+  const handleSynthesisChange = (val: string) => {
+    setSynthesis(val);
+    if (val.trim().length > 0) {
+      advanceIfCurrent('recall_intent');
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!synthesis.trim() || isSubmitting) return;
     setIsTimerLocked(true);
+    advanceIfCurrent('recall_proceed');
     onSubmitRecall(synthesis.trim(), elapsedSeconds);
   };
 
@@ -118,7 +128,7 @@ export const IntentRecall: React.FC<IntentRecallProps> = ({
 
       {/* Synthesis Input Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
+        <div data-tour="intent-recall-box">
           <label htmlFor="intent-synthesis" className="block text-sm font-semibold text-stone-200 mb-2">
             Your Answer from Memory
           </label>
@@ -126,7 +136,7 @@ export const IntentRecall: React.FC<IntentRecallProps> = ({
             id="intent-synthesis"
             rows={5}
             value={synthesis}
-            onChange={(e) => setSynthesis(e.target.value)}
+            onChange={(e) => handleSynthesisChange(e.target.value)}
             placeholder="Explain what you remember in your own words. Focus on the main ideas, causes, or conclusions..."
             className="w-full bg-stone-950 border border-stone-800 rounded-xl p-4 text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm leading-relaxed"
             required
@@ -142,6 +152,7 @@ export const IntentRecall: React.FC<IntentRecallProps> = ({
 
           <button
             type="submit"
+            data-tour="proceed-to-summary-btn"
             disabled={!synthesis.trim() || isSubmitting}
             className="py-3 px-6 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-semibold text-sm transition-all shadow-xl shadow-amber-700/20 flex items-center space-x-2 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
           >

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTutorial } from '../../context/TutorialContext';
 import { CheckCircle2, ArrowRight, Layers, HelpCircle } from 'lucide-react';
 import type { SubmitDebriefRequest } from '../../types';
 
@@ -11,6 +12,7 @@ export const DebriefSynthesis: React.FC<DebriefSynthesisProps> = ({
   isSubmitting = false,
   onSubmitDebrief,
 }) => {
+  const { advanceIfCurrent } = useTutorial();
   const [corePremise, setCorePremise] = useState<string>('');
   const [pivot, setPivot] = useState<string>('');
   const [implication, setImplication] = useState<string>('');
@@ -20,10 +22,32 @@ export const DebriefSynthesis: React.FC<DebriefSynthesisProps> = ({
     pivot.trim().length > 0 &&
     implication.trim().length > 0;
 
+  const handlePremiseChange = (val: string) => {
+    setCorePremise(val);
+    if (val.trim().length > 0) {
+      advanceIfCurrent('debrief_premise');
+    }
+  };
+
+  const handlePivotChange = (val: string) => {
+    setPivot(val);
+    if (val.trim().length > 0) {
+      advanceIfCurrent('debrief_pivot');
+    }
+  };
+
+  const handleImplicationChange = (val: string) => {
+    setImplication(val);
+    if (val.trim().length > 0) {
+      advanceIfCurrent('debrief_takeaway');
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValid || isSubmitting) return;
 
+    advanceIfCurrent('debrief_complete');
     onSubmitDebrief({
       core_premise: corePremise.trim(),
       pivot_or_surprise: pivot.trim(),
@@ -55,7 +79,7 @@ export const DebriefSynthesis: React.FC<DebriefSynthesisProps> = ({
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Sentence 1: Core Premise */}
-        <div className="bg-stone-900/40 border border-stone-800 rounded-xl p-5">
+        <div data-tour="summary-premise-box" className="bg-stone-900/40 border border-stone-800 rounded-xl p-5">
           <div className="flex items-center justify-between mb-2">
             <label
               htmlFor="core-premise"
@@ -75,7 +99,7 @@ export const DebriefSynthesis: React.FC<DebriefSynthesisProps> = ({
             id="core-premise"
             rows={2}
             value={corePremise}
-            onChange={(e) => setCorePremise(e.target.value)}
+            onChange={(e) => handlePremiseChange(e.target.value)}
             placeholder="e.g. In the beginning, the author introduces the basic idea that..."
             className="w-full bg-stone-950 border border-stone-800 rounded-lg p-3 text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm"
             required
@@ -83,7 +107,7 @@ export const DebriefSynthesis: React.FC<DebriefSynthesisProps> = ({
         </div>
 
         {/* Sentence 2: Pivot / Complication */}
-        <div className="bg-stone-900/40 border border-stone-800 rounded-xl p-5">
+        <div data-tour="summary-pivot-box" className="bg-stone-900/40 border border-stone-800 rounded-xl p-5">
           <div className="flex items-center justify-between mb-2">
             <label
               htmlFor="pivot-surprise"
@@ -103,7 +127,7 @@ export const DebriefSynthesis: React.FC<DebriefSynthesisProps> = ({
             id="pivot-surprise"
             rows={2}
             value={pivot}
-            onChange={(e) => setPivot(e.target.value)}
+            onChange={(e) => handlePivotChange(e.target.value)}
             placeholder="e.g. However, a new challenge or discovery reveals that..."
             className="w-full bg-stone-950 border border-stone-800 rounded-lg p-3 text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm"
             required
@@ -111,7 +135,7 @@ export const DebriefSynthesis: React.FC<DebriefSynthesisProps> = ({
         </div>
 
         {/* Sentence 3: Implication / Resolution */}
-        <div className="bg-stone-900/40 border border-stone-800 rounded-xl p-5">
+        <div data-tour="summary-takeaway-box" className="bg-stone-900/40 border border-stone-800 rounded-xl p-5">
           <div className="flex items-center justify-between mb-2">
             <label
               htmlFor="implication"
@@ -131,7 +155,7 @@ export const DebriefSynthesis: React.FC<DebriefSynthesisProps> = ({
             id="implication"
             rows={2}
             value={implication}
-            onChange={(e) => setImplication(e.target.value)}
+            onChange={(e) => handleImplicationChange(e.target.value)}
             placeholder="e.g. As a result, we learn that..."
             className="w-full bg-stone-950 border border-stone-800 rounded-lg p-3 text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm"
             required
@@ -140,6 +164,7 @@ export const DebriefSynthesis: React.FC<DebriefSynthesisProps> = ({
 
         <button
           type="submit"
+          data-tour="complete-report-btn"
           disabled={!isValid || isSubmitting}
           className="w-full py-3.5 px-6 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-semibold text-sm transition-all shadow-xl shadow-amber-700/20 flex items-center justify-center space-x-2 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >

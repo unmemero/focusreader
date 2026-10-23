@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import type { CorpusPassage } from '../../types';
 import { api } from '../../lib/api';
+import { useTutorial } from '../../context/TutorialContext';
 import { Sparkles, ArrowRight, ArrowLeft, Target, Compass, Zap, Flame } from 'lucide-react';
 
 interface PreFlightIntentProps {
@@ -65,6 +66,7 @@ export const PreFlightIntent: React.FC<PreFlightIntentProps> = ({
   onStartReading,
   onBackToLibrary,
 }) => {
+  const { advanceIfCurrent } = useTutorial();
   const [step, setStep] = useState<'lens' | 'question'>('lens');
   const [selectedLens, setSelectedLens] = useState<string | null>(null);
   const [question, setQuestion] = useState<string>('');
@@ -78,6 +80,7 @@ export const PreFlightIntent: React.FC<PreFlightIntentProps> = ({
       setSelectedLens(lensId);
       setStep('question');
     }, 'forward');
+    advanceIfCurrent('intent_lens');
   };
 
   const handleBackToLens = () => {
@@ -136,7 +139,7 @@ export const PreFlightIntent: React.FC<PreFlightIntentProps> = ({
             <span className="text-xs text-stone-400">Step 1 of 2</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div data-tour="focus-lens-selector" className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {LENSES.map((lens) => {
               const Icon = lens.icon;
               const isSelected = selectedLens === lens.id;
@@ -183,7 +186,7 @@ export const PreFlightIntent: React.FC<PreFlightIntentProps> = ({
             <span className="text-xs text-stone-400">Step 2 of 2</span>
           </div>
 
-          <div>
+          <div data-tour="guiding-question-box">
             <div className="flex items-center justify-between mb-2">
               <label htmlFor="intent-question" className="text-xs text-stone-400">
                 Write a question to guide your attention, or ask the coach to suggest one:
@@ -229,6 +232,7 @@ export const PreFlightIntent: React.FC<PreFlightIntentProps> = ({
 
             <button
               type="submit"
+              data-tour="begin-reading-drill-btn"
               disabled={!question.trim()}
               className="w-full sm:flex-1 py-3 px-6 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-semibold text-sm transition-all shadow-xl shadow-amber-700/20 flex items-center justify-center space-x-2 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
             >

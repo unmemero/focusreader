@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import type { CorpusPassage } from '../../types';
+import { useTutorial } from '../../context/TutorialContext';
 import { Flag } from 'lucide-react';
 
 interface IndexCardPacerProps {
@@ -16,6 +17,7 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
   onRecordDrift,
   onFinishReading,
 }) => {
+  const { advanceIfCurrent } = useTutorial();
   const [activeUnitIndex, setActiveUnitIndex] = useState<number>(0);
   const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
   const [isDriftFlash, setIsDriftFlash] = useState<boolean>(false);
@@ -54,7 +56,8 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
     setIsDriftFlash(true);
     setTimeout(() => setIsDriftFlash(false), 300);
     onRecordDrift(elapsedSeconds, activeUnitIndex + 1);
-  }, [elapsedSeconds, activeUnitIndex, onRecordDrift]);
+    advanceIfCurrent('pacer_drift');
+  }, [elapsedSeconds, activeUnitIndex, onRecordDrift, advanceIfCurrent]);
 
   // Advance to next unit, or finish if already at the end
   const handleAdvanceNext = useCallback(() => {
@@ -62,8 +65,9 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
       onFinishReading(elapsedSeconds);
     } else {
       setActiveUnitIndex((prev) => Math.min(units.length - 1, prev + 1));
+      advanceIfCurrent('pacer_advance');
     }
-  }, [activeUnitIndex, units.length, onFinishReading, elapsedSeconds]);
+  }, [activeUnitIndex, units.length, onFinishReading, elapsedSeconds, advanceIfCurrent]);
 
   // Keyboard navigation for pacer
   useEffect(() => {
@@ -109,7 +113,7 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
               </span>
             </div>
 
-            <div className="flex flex-col">
+            <div data-tour="pacer-focus-breaks" className="flex flex-col">
               <span className="text-[11px] text-stone-400 font-medium">Focus Breaks</span>
               <span
                 className={`font-semibold flex items-center space-x-1 transition-colors ${
@@ -163,6 +167,7 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
       {/* Shrouded Reading Passage Viewport */}
       <div
         data-testid="pacer-passage-viewport"
+        data-tour="pacer-passage-viewport"
         onClick={handleAdvanceNext}
         className="bg-stone-900/40 border border-stone-800/70 rounded-2xl p-8 sm:p-12 space-y-6 cursor-pointer"
       >
