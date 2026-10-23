@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import type { CorpusPassage } from '../../types';
-import { EyeOff, Flag, ArrowRight } from 'lucide-react';
+import { EyeOff, Flag } from 'lucide-react';
 
 interface IndexCardPacerProps {
   passage: CorpusPassage;
@@ -116,13 +116,9 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={() => onFinishReading(elapsedSeconds)}
-            className="px-3.5 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-stone-950 font-semibold text-xs transition-colors flex items-center space-x-1.5 cursor-pointer shadow-sm"
-          >
-            <span>Finished Reading</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          <div className="text-[11px] text-stone-400 flex items-center space-x-1.5">
+            <span>Press <kbd className="px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 text-stone-300 font-mono text-[10px]">↓</kbd> or <kbd className="px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 text-stone-300 font-mono text-[10px]">Ctrl+Enter</kbd> to finish</span>
+          </div>
         </div>
 
         {/* Progress Bar */}

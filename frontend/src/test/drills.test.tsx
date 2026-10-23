@@ -93,9 +93,11 @@ describe('Drill Pipeline Components', () => {
       fireEvent.click(driftBtn);
       expect(onRecordDrift).toHaveBeenCalled();
 
-      // Click finish reading
-      const finishBtn = screen.getByRole('button', { name: /Finished Reading/i });
-      fireEvent.click(finishBtn);
+      // Verify Finished Reading button is removed
+      expect(screen.queryByRole('button', { name: /Finished Reading/i })).not.toBeInTheDocument();
+
+      // Finish reading via Ctrl+Enter shortcut
+      fireEvent.keyDown(window, { key: 'Enter', ctrlKey: true });
       expect(onFinishReading).toHaveBeenCalled();
     });
 
