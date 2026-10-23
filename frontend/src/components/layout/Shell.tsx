@@ -27,7 +27,7 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
     <div className="min-h-screen bg-[var(--bg-canvas)] text-stone-100 flex flex-col font-sans selection:bg-amber-500/30 selection:text-amber-100 transition-colors duration-200">
       {/* Top Header - hidden automatically in Distraction-Free active reading mode */}
       {!isDistractionFree && (
-        <header className="border-b border-stone-800/80 bg-stone-900/90 backdrop-blur-md sticky top-0 z-40 transition-colors duration-200">
+        <header className="border-b border-stone-800/80 bg-stone-900/90 backdrop-blur-md sticky top-0 z-40 transition-colors duration-200 relative">
           <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
             {/* Logo & Brand */}
             <div className="flex items-center space-x-3 cursor-pointer" onClick={() => onTabChange('drill')}>
@@ -71,8 +71,8 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
               </button>
             </nav>
 
-            {/* Right Controls: Analytics, Settings, Theme Toggle & AI Status */}
-            <div className="flex items-center space-x-2 text-xs font-medium">
+            {/* Right Action Buttons in original relative position: Analytics, Settings, Theme Toggle */}
+            <div className="flex items-center space-x-2 text-xs font-medium mr-10 xl:mr-0">
               <button
                 type="button"
                 onClick={() => onTabChange('analytics')}
@@ -122,31 +122,31 @@ export const Shell: React.FC<ShellProps> = ({ children, activeTab, onTabChange }
                   <Moon className="w-4 h-4 text-amber-200" />
                 )}
               </button>
-
-              {/* Frameless AI Spark in the far right corner */}
-              <div
-                role="status"
-                aria-label={
-                  config?.is_llm_connected
-                    ? `AI Coach Online (${config.llm_model})`
-                    : 'AI Coach Offline (Practice Mode)'
-                }
-                title={
-                  config?.is_llm_connected
-                    ? `AI Coach Online (${config.llm_model})`
-                    : 'AI Coach Offline (Practice Mode)'
-                }
-                className="pl-1.5 flex items-center justify-center cursor-default select-none"
-              >
-                <Sparkles
-                  className={`w-5 h-5 transition-colors duration-300 ${
-                    config?.is_llm_connected
-                      ? 'text-emerald-400 sparkle-twinkle'
-                      : 'text-stone-500 opacity-40'
-                  }`}
-                />
-              </div>
             </div>
+          </div>
+
+          {/* Frameless AI Spark separated to the very edge of the screen */}
+          <div
+            role="status"
+            aria-label={
+              config?.is_llm_connected
+                ? `AI Coach Online (${config.llm_model})`
+                : 'AI Coach Offline (Practice Mode)'
+            }
+            title={
+              config?.is_llm_connected
+                ? `AI Coach Online (${config.llm_model})`
+                : 'AI Coach Offline (Practice Mode)'
+            }
+            className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-default select-none pointer-events-auto"
+          >
+            <Sparkles
+              className={`w-5 h-5 transition-colors duration-300 ${
+                config?.is_llm_connected
+                  ? 'text-emerald-400 sparkle-twinkle'
+                  : 'text-stone-500 opacity-40'
+              }`}
+            />
           </div>
         </header>
       )}
