@@ -56,6 +56,15 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
     onRecordDrift(elapsedSeconds, activeUnitIndex + 1);
   }, [elapsedSeconds, activeUnitIndex, onRecordDrift]);
 
+  // Advance to next unit, or finish if already at the end
+  const handleAdvanceNext = useCallback(() => {
+    if (activeUnitIndex >= units.length - 1) {
+      onFinishReading(elapsedSeconds);
+    } else {
+      setActiveUnitIndex((prev) => Math.min(units.length - 1, prev + 1));
+    }
+  }, [activeUnitIndex, units.length, onFinishReading, elapsedSeconds]);
+
   // Keyboard navigation for pacer
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -70,11 +79,7 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
 
       if (e.key === 'ArrowDown' || e.key === 'j' || e.key === 'J') {
         e.preventDefault();
-        if (activeUnitIndex >= units.length - 1) {
-          onFinishReading(elapsedSeconds);
-        } else {
-          setActiveUnitIndex((prev) => Math.min(units.length - 1, prev + 1));
-        }
+        handleAdvanceNext();
       } else if (e.code === 'Space') {
         e.preventDefault();
         triggerDrift();
@@ -86,7 +91,7 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeUnitIndex, units.length, triggerDrift, onFinishReading, elapsedSeconds]);
+  }, [handleAdvanceNext, triggerDrift, onFinishReading, elapsedSeconds]);
 
   const progressPct = Math.round(((activeUnitIndex + 1) / units.length) * 100);
 
@@ -117,7 +122,7 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
           </div>
 
           <div className="text-[11px] text-stone-400 flex items-center space-x-1.5">
-            <span>Press <kbd className="px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 text-stone-300 font-mono text-[10px]">↓</kbd> or <kbd className="px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 text-stone-300 font-mono text-[10px]">Ctrl+Enter</kbd> to finish</span>
+            <span>Press <kbd className="px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 text-stone-300 font-mono text-[10px]">↓</kbd> or click to move to next</span>
           </div>
         </div>
 
@@ -131,7 +136,11 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
       </div>
 
       {/* Shrouded Reading Passage Viewport */}
-      <div className="bg-stone-900/40 border border-stone-800/70 rounded-2xl p-8 sm:p-12 space-y-6">
+      <div
+        data-testid="pacer-passage-viewport"
+        onClick={handleAdvanceNext}
+        className="bg-stone-900/40 border border-stone-800/70 rounded-2xl p-8 sm:p-12 space-y-6 cursor-pointer"
+      >
         <div className="border-b border-stone-800/80 pb-4 mb-6">
           <h1 className="text-xl sm:text-2xl font-bold text-stone-100 tracking-tight font-serif">
             {passage.title}
@@ -151,7 +160,10 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
               <div
                 key={idx}
                 ref={isActive ? activeLineRef : null}
-                onClick={() => setActiveUnitIndex(idx)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveUnitIndex(idx);
+                }}
                 className={`transition-all duration-200 rounded-lg p-2.5 cursor-pointer relative ${
                   isActive
                     ? 'bg-amber-950/35 border-l-4 border-amber-400 text-stone-100 font-medium shadow-sm'
@@ -180,7 +192,7 @@ export const IndexCardPacer: React.FC<IndexCardPacerProps> = ({
             </kbd>{' '}
             <span>/</span>{' '}
             <kbd className="px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 text-stone-200">
-              J
+              Click
             </kbd>
             <span>Next Line</span>
           </span>

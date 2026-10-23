@@ -85,6 +85,7 @@ describe('Drill Pipeline Components', () => {
 
       expect(screen.getByText(/Elapsed Time/)).toBeInTheDocument();
       expect(screen.getByText(/Focus Breaks/)).toBeInTheDocument();
+      expect(screen.getByText(/or click to move to next/i)).toBeInTheDocument();
       expect(screen.queryByText(/Current Line/)).not.toBeInTheDocument();
       expect(screen.queryByText(/Step 2: Guided Reading/)).not.toBeInTheDocument();
 
@@ -101,7 +102,7 @@ describe('Drill Pipeline Components', () => {
       expect(onFinishReading).toHaveBeenCalled();
     });
 
-    it('advances units with ArrowDown and finishes reading when pressing ArrowDown on the last line', () => {
+    it('advances units with ArrowDown or click outside, and selects unit on direct click', () => {
       const onRecordDrift = vi.fn();
       const onFinishReading = vi.fn();
 
@@ -119,11 +120,19 @@ describe('Drill Pipeline Components', () => {
       fireEvent.keyDown(window, { code: 'Space' });
       expect(onRecordDrift).toHaveBeenCalled();
 
-      // mockPassage has 3 sentences; pressing ArrowDown 3 times reaches the end and finishes reading
-      fireEvent.keyDown(window, { key: 'ArrowDown' });
-      fireEvent.keyDown(window, { key: 'ArrowDown' });
-      expect(onFinishReading).not.toHaveBeenCalled();
-      fireEvent.keyDown(window, { key: 'ArrowDown' });
+      // Clicking directly on the 2nd sentence selects it
+      const secondSentence = screen.getByText(/This foundational result is quantified via Bell inequalities/i);
+      fireEvent.click(secondSentence);
+      expect(secondSentence.closest('div')).toHaveClass('border-amber-400');
+
+      // Clicking outside on the passage viewport advances to the 3rd sentence
+      const viewport = screen.getByTestId('pacer-passage-viewport');
+      fireEvent.click(viewport);
+      const thirdSentence = screen.getByText(/Experimental tests conducted by Alain Aspect/i);
+      expect(thirdSentence.closest('div')).toHaveClass('border-amber-400');
+
+      // Clicking outside on the last sentence finishes reading
+      fireEvent.click(viewport);
       expect(onFinishReading).toHaveBeenCalled();
     });
   });
